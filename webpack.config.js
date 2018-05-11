@@ -3,27 +3,26 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const tsImportPluginFactory = require('ts-import-plugin');
 
 module.exports = {
     mode: 'development',
     context: resolve(__dirname, 'src'),
     entry: [
-        'webpack-dev-server/client?http://localhost:8080',
         // bundle the client for webpack-dev-server
         // and connect to the provided endpoint
-        'webpack/hot/only-dev-server',
+        'webpack-dev-server/client?http://localhost:8080',
         // bundle the client for hot reloading
         // only- means to only hot reload for successful updates
-        './index.tsx'
+        'webpack/hot/only-dev-server',
         // the entry point of our app
+        './index.tsx'
     ],
     output: {
-        filename: 'hotloader.js',
         // the output bundle
+        filename: 'hotloader.js',
         path: resolve(__dirname, 'dist'),
-        publicPath: '/'
         // necessary for HMR to know where to load the hot update chunks
+        publicPath: '/'
     },
     devtool: 'inline-source-map',
     resolve: {
@@ -31,17 +30,17 @@ module.exports = {
         extensions: [".ts", ".tsx", ".js", ".json"]
     },
     devServer: {
-        port: '8080',
         // Change it if other port needs to be used
-        hot: true,
+        port: '8080',
         // enable HMR on the server
+        hot: true,
         noInfo: true,
-        quiet: false,
         // minimize the output to terminal.
-        contentBase: resolve(__dirname, 'src'),
+        quiet: false,
         // match the output path
-        publicPath: '/'
+        contentBase: resolve(__dirname, 'src'),
         // match the output `publicPath`
+        publicPath: '/'
     },
     module: {
         rules: [
@@ -94,12 +93,12 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
         // enable HMR globally
-        new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
         // prints more readable module names in the browser console on HMR updates
-        new HtmlWebpackPlugin({ template: resolve(__dirname, 'src/index.html') }),
+        new webpack.NamedModulesPlugin(),
         // inject <script> in html file. 
+        new HtmlWebpackPlugin({ template: resolve(__dirname, 'src/index.html') }),
         new OpenBrowserPlugin({ url: 'http://localhost:8080' }),
     ],
 };
