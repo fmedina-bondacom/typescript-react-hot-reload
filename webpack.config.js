@@ -4,13 +4,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const serverPort = 9000;
+const sourcePath = 'source';
+const buildPath = 'dist';
+
 module.exports = {
     mode: 'development',
-    context: resolve(__dirname, 'src'),
+    context: resolve(__dirname, sourcePath),
     entry: [
         // bundle the client for webpack-dev-server
         // and connect to the provided endpoint
-        'webpack-dev-server/client?http://localhost:8080',
+        'webpack-dev-server/client?http://localhost:' + serverPort,
         // bundle the client for hot reloading
         // only- means to only hot reload for successful updates
         'webpack/hot/only-dev-server',
@@ -19,8 +23,8 @@ module.exports = {
     ],
     output: {
         // the output bundle
-        filename: 'hotloader.js',
-        path: resolve(__dirname, 'dist'),
+        filename: 'index.js',
+        path: resolve(__dirname, buildPath),
         // necessary for HMR to know where to load the hot update chunks
         publicPath: '/'
     },
@@ -31,14 +35,14 @@ module.exports = {
     },
     devServer: {
         // Change it if other port needs to be used
-        port: '8080',
+        port: serverPort,
         // enable HMR on the server
         hot: true,
         noInfo: true,
         // minimize the output to terminal.
         quiet: false,
         // match the output path
-        contentBase: resolve(__dirname, 'src'),
+        contentBase: resolve(__dirname, sourcePath),
         // match the output `publicPath`
         publicPath: '/'
     },
@@ -97,8 +101,14 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         // prints more readable module names in the browser console on HMR updates
         new webpack.NamedModulesPlugin(),
-        // inject <script> in html file. 
-        new HtmlWebpackPlugin({ template: resolve(__dirname, 'src/index.html') }),
-        new OpenBrowserPlugin({ url: 'http://localhost:8080' }),
+        // inject <script> in html file and copy the html to the build folder.
+        new HtmlWebpackPlugin({ template: resolve(__dirname, sourcePath + '/index.html') }),
+        // copy css and other files to the build folder to avoid path issues.
+        new CopyWebpackPlugin(
+            [
+                { from: './', to: '../' + buildPath, ignore: ['*.ts', '*.tsx', '*.html'] }
+            ]
+        ),
+        new OpenBrowserPlugin({ url: 'http://localhost:' + serverPort }),
     ],
 };

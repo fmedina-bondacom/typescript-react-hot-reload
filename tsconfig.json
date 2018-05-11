@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
-        "outDir": "./built/",
+        // "rootDir": "source",
+        // "outDir": "./dist/",
         "module": "esnext",
         "target": "es5",
         "lib": [
@@ -14,7 +15,6 @@
         "allowJs": true,
         "jsx": "react",
         "moduleResolution": "node",
-        "rootDir": "src",
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noImplicitAny": true,
@@ -22,7 +22,7 @@
         "noUnusedLocals": true
     },
     "include": [
-        "./src/**/*"
+        "./source/**/*"
     ],
     "exclude": [
         "node_modules"
