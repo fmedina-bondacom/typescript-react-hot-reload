@@ -4,19 +4,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const serverPort = 9000;
 const sourcePath = 'source';
 const buildPath = 'dist';
+const testServerPort = 9000;
 
 module.exports = {
-    mode: 'development',
+    mode: 'development',    // Values: "development", "production" or "none"
     context: resolve(__dirname, sourcePath),
     entry: [
-        // bundle the client for webpack-dev-server
-        // and connect to the provided endpoint
-        'webpack-dev-server/client?http://localhost:' + serverPort,
-        // bundle the client for hot reloading
-        // only- means to only hot reload for successful updates
+        // bundle the client for webpack-dev-server and connect to the provided endpoint
+        'webpack-dev-server/client?http://localhost:' + testServerPort,
+        // bundle the client for hot reloading only - means to only hot reload for successful updates
         'webpack/hot/only-dev-server',
         // the entry point of our app
         './index.tsx'
@@ -35,7 +33,7 @@ module.exports = {
     },
     devServer: {
         // Change it if other port needs to be used
-        port: serverPort,
+        port: testServerPort,
         // enable HMR on the server
         hot: true,
         noInfo: true,
@@ -109,6 +107,6 @@ module.exports = {
                 { from: './', to: '../' + buildPath, ignore: ['*.ts', '*.tsx', '*.html'] }
             ]
         ),
-        new OpenBrowserPlugin({ url: 'http://localhost:' + serverPort }),
+        new OpenBrowserPlugin({ url: 'http://localhost:' + testServerPort }),
     ],
 };
